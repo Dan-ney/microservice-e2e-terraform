@@ -28,8 +28,8 @@ module "jenkins_firewall" {
 
   rules = [
     {
-      name                    = "${var.environment}-jenkins-http"
-      description             = "Allow HTTP and HTTPS to Jenkins"
+      name                    = "${var.environment}-jenkins-ui"
+      description             = "Allow Jenkins UI access"
       direction               = "INGRESS"
       priority                = 1000
       ranges                  = ["0.0.0.0/0"]
@@ -40,7 +40,7 @@ module "jenkins_firewall" {
       allow = [
         {
           protocol = "tcp"
-          ports    = ["80", "443"]
+          ports    = ["8080"]
         }
       ]
       deny = []
