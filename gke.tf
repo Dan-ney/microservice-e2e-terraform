@@ -5,10 +5,10 @@ module "gke" {
   region              = var.region
   zone                = var.zone
   environment         = var.environment
-  network_name        = module.vpc.vpc_name
-  subnet_name         = module.vpc.subnet_name
-  pods_range_name     = module.vpc.pods_range_name
-  services_range_name = module.vpc.services_range_name
+  network_name        = module.network.vpc_name
+  subnet_name         = module.network.subnet_name
+  pods_range_name     = module.network.pods_range_name
+  services_range_name = module.network.services_range_name
   machine_type        = "e2-medium"
   disk_size_gb        = 20
   min_node_count      = 1
