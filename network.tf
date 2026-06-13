@@ -1,4 +1,4 @@
-module "vpc" {
+module "network" {
   source = "./modules/vpc"
 
   project_id    = var.project_id
