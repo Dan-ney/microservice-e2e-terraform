@@ -11,7 +11,7 @@ variable "project_roles" {
 variable "github_repo_owner" {
   description = "GitHub repository owner (organization or username)."
   type        = string
-  default     = "cupid-mapping-inc"
+  default     = "Dan-ney"
 }
 
 variable "github_repo_name" {
