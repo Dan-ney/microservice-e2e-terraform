@@ -19,3 +19,14 @@ output "cluster_endpoint" {
   value       = module.gke.cluster_endpoint
   sensitive   = true
 }
+
+#jenkins
+output "jenkins_url" {
+  description = "Jenkins URL"
+  value       = "http://${google_compute_address.jenkins.address}:8080"
+}
+
+output "jenkins_ip" {
+  description = "Jenkins VM public IP"
+  value       = google_compute_address.jenkins.address
+}
