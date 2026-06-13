@@ -16,6 +16,6 @@ module "gke" {
 
   depends_on = [
     google_project_service.required_apis,
-    module.vpc
+    module.network
   ]
 }
