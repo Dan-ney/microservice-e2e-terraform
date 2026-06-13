@@ -2,12 +2,12 @@ locals {
   name = trim(substr(
     replace(
       lower("github-actions-${var.github_repo_name}"),
-      "/[^a-z0-9-]/",                                  
+      "/[^a-z0-9-]/",
       "-"
     ),
     0,
     30
-  ),"-")
+  ), "-")
 }
 
 module "github_actions_sa" {
