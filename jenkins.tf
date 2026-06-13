@@ -24,7 +24,7 @@ module "jenkins_firewall" {
   version = "~> 9.0"
 
   project_id   = var.project_id
-  network_name = module.vpc.vpc_name
+  network_name = module.network.vpc_name
 
   rules = [
     {
@@ -95,7 +95,7 @@ resource "google_compute_instance" "jenkins" {
   }
 
   network_interface {
-    subnetwork = module.vpc.subnet_name
+    subnetwork = module.network.subnet_name
     access_config {
       nat_ip = google_compute_address.jenkins.address
     }
@@ -120,6 +120,6 @@ resource "google_compute_instance" "jenkins" {
     module.jenkins_sa,
     module.jenkins_firewall,
     google_project_service.required_apis,
-    module.vpc
+    module.network
   ]
 }
