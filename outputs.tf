@@ -30,3 +30,24 @@ output "jenkins_ip" {
   description = "Jenkins VM public IP"
   value       = google_compute_address.jenkins.address
 }
+
+#artifactRegistry
+output "ar_frontend_url" {
+  value = module.ar_frontend.repository_url
+}
+
+output "ar_auth_api_url" {
+  value = module.ar_auth_api.repository_url
+}
+
+output "ar_todos_api_url" {
+  value = module.ar_todos_api.repository_url
+}
+
+output "ar_users_api_url" {
+  value = module.ar_users_api.repository_url
+}
+
+output "ar_log_processor_url" {
+  value = module.ar_log_processor.repository_url
+}
