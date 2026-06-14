@@ -12,7 +12,7 @@ module "gke" {
   machine_type        = "e2-medium"
   disk_size_gb        = 20
   min_node_count      = 1
-  max_node_count      = 2
+  max_node_count      = 3
 
   depends_on = [
     google_project_service.required_apis,
