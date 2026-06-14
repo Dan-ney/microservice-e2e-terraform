@@ -52,3 +52,14 @@ module "ar_log_processor" {
 
   depends_on = [google_project_service.required_apis]
 }
+
+module "ar_helm" {
+  source = "./modules/artifact-registry"
+
+  project_id    = var.project_id
+  region        = var.region
+  repository_id = "helm"
+  description   = "Docker images for helm-charts"
+
+  depends_on = [google_project_service.required_apis]
+}
