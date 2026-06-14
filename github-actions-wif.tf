@@ -18,5 +18,8 @@ module "github_helm_wif" {
     "${var.project_id}=>roles/artifactregistry.writer",
     "${var.project_id}=>roles/artifactregistry.reader",
   ]
-  depends_on = [google_project_service.required_apis]
+  depends_on = [
+    google_project_service.required_apis,
+    module.github_terraform_wif
+  ]
 }
