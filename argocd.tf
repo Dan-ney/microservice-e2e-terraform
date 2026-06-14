@@ -15,7 +15,6 @@ resource "helm_release" "argocd" {
   values = [
     file("${path.root}/files/argocd-values.yaml"),
     <<-EOT
-    # 🛠️ Shifted to the root level (Removed the "server:" parent block)
     additionalApplications:
       - name: root
         namespace: argocd
