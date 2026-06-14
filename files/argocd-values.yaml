@@ -16,7 +16,7 @@ repoServer:
     create: true
     name: argocd-repo-server
     annotations:
-      iam.gke.io/gcp-service-account: "prod-argocd-sa@project-75c9b927-531d-4e58-a2b.iam.gserviceaccount.com"
+      iam.gke.io/gcp-service-account: "argocd-wif@project-75c9b927-531d-4e58-a2b.iam.gserviceaccount.com"
 
   initContainers:
   - name: download-tools
