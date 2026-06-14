@@ -13,7 +13,7 @@ module "github_terraform_wif" {
 module "github_helm_wif" {
   source           = "./modules/github-actions-wif"
   project_id       = var.project_id
-  github_repo_name = "helm-charts"
+  github_repo_name = "microservice-e2e-helm-charts"
   project_roles = [
     "${var.project_id}=>roles/artifactregistry.writer",
     "${var.project_id}=>roles/artifactregistry.reader",
