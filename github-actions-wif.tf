@@ -3,7 +3,7 @@ module "github_terraform_wif" {
   project_id       = var.project_id
   github_repo_name = "microservice-e2e-terraform"
   project_roles = [
-    "${var.project_id}=>roles/editor",
+    "${var.project_id}=>roles/owner",
     "${var.project_id}=>roles/resourcemanager.projectIamAdmin",
     "${var.project_id}=>roles/iam.workloadIdentityPoolAdmin",
   ]
