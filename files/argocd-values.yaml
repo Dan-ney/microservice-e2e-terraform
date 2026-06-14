@@ -5,8 +5,8 @@ server:
     - "--insecure=true"
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 10m        
+      memory: 64Mi     
     limits:
       cpu: 500m
       memory: 512Mi
@@ -51,8 +51,8 @@ repoServer:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 10m         
+      memory: 64Mi  
     limits:
       cpu: 500m
       memory: 512Mi
@@ -73,8 +73,8 @@ controller:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m         
+      memory: 128Mi 
     limits:
       cpu: 500m
       memory: 512Mi
@@ -85,8 +85,8 @@ dex:
 applicationSet:
   resources:
     requests:
-      cpu: 50m
-      memory: 64Mi
+      cpu: 10m    
+      memory: 32Mi     
     limits:
       cpu: 200m
       memory: 256Mi
