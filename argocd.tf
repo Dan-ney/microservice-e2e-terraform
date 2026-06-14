@@ -19,7 +19,7 @@ resource "helm_release" "argocd" {
 
   depends_on = [
     module.gke,
-    google_service_account.argocd
+    module.argocd_workload_identity
   ]
 }
 
