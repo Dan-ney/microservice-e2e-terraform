@@ -51,3 +51,15 @@ output "ar_users_api_url" {
 output "ar_log_processor_url" {
   value = module.ar_log_processor.repository_url
 }
+
+#argoCD
+output "argocd_namespace" {
+  description = "ArgoCD namespace"
+  value       = "argocd"
+}
+
+output "argocd_password" {
+  description = "ArgoCD admin password"
+  value       = data.kubernetes_secret.argocd_admin_password.data.password
+  sensitive   = true
+}

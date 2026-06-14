@@ -1,0 +1,95 @@
+server:
+  service:
+    type: LoadBalancer
+  extraArgs:
+    - "--insecure=true"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+repoServer:
+  serviceAccount:
+    create: true
+    name: argocd-repo-server
+    annotations:
+      iam.gke.io/gcp-service-account: "argocd-wif@project-75c9b927-531d-4e58-a2b.iam.gserviceaccount.com"
+
+  initContainers:
+  - name: download-tools
+    image: alpine:3
+    command: [sh, -c]
+    args:
+    - |
+      cd /var/run/docker-credential-gcr
+      wget -qO - https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/download/v2.1.8/docker-credential-gcr_linux_amd64-2.1.8.tar.gz | tar xz
+      PATH=.:$PATH HOME=/var/run/config docker-credential-gcr configure-docker --include-artifact-registry
+      chmod +r /var/run/config/.docker/config.json
+    volumeMounts:
+    - mountPath: /var/run/docker-credential-gcr
+      name: docker-credential-gcr
+    - mountPath: /var/run/config/.docker
+      name: docker-config
+
+  volumeMounts:
+  - mountPath: /usr/local/bin/docker-credential-gcr
+    name: docker-credential-gcr
+    subPath: docker-credential-gcr
+    readOnly: true
+  - mountPath: /home/argocd/.docker
+    name: docker-config
+    readOnly: true
+
+  volumes:
+  - emptyDir: {}
+    name: docker-credential-gcr
+  - emptyDir: {}
+    name: docker-config
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+controller:
+  serviceAccount:
+    create: true
+    name: argocd-application-controller
+    annotations:
+      iam.gke.io/gcp-service-account: "prod-argocd-sa@project-75c9b927-531d-4e58-a2b.iam.gserviceaccount.com"
+
+  clusterRoleRules:
+    enabled: true
+    rules:
+      - apiGroups: ["*"]
+        resources: ["*"]
+        verbs: ["*"]
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+dex:
+  enabled: false
+
+applicationSet:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+notifications:
+  enabled: false
