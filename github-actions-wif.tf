@@ -5,6 +5,7 @@ module "github_terraform_wif" {
   project_roles = [
     "${var.project_id}=>roles/editor",
     "${var.project_id}=>roles/resourcemanager.projectIamAdmin",
+    "${var.project_id}=>roles/iam.workloadIdentityPoolAdmin",
   ]
   depends_on = [google_project_service.required_apis]
 }
