@@ -57,3 +57,9 @@ output "argocd_namespace" {
   description = "ArgoCD namespace"
   value       = "argocd"
 }
+
+output "argocd_password" {
+  description = "ArgoCD admin password"
+  value       = data.kubernetes_secret.argocd_admin_password.data.password
+  sensitive   = true
+}
