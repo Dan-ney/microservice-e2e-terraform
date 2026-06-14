@@ -13,7 +13,7 @@ data "google_client_config" "default" {}
 data "google_container_cluster" "primary" {
   name     = "${var.environment}-gke-cluster"
   location = var.zone
-  project  = var.project_ID
+  project  = var.project_id
 }
 
 provider "helm" {
