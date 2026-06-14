@@ -2,7 +2,7 @@ locals {
   argocd_namespace = "argocd"
 }
 
-# ArgoCD Helm Release
+# ArgoCD Helm Release + Root App Creation
 resource "helm_release" "argocd" {
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
@@ -11,47 +11,32 @@ resource "helm_release" "argocd" {
   namespace        = local.argocd_namespace
   create_namespace = true
 
-  values = [file("${path.root}/files/argocd-values.yaml")]
-
-  lifecycle {
-    ignore_changes = [metadata]
-  }
+values = [
+    file("${path.root}/files/argocd-values.yaml"),
+    <<-EOT
+    server:
+      additionalApplications:
+        - name: root
+          namespace: argocd
+          project: default
+          source:
+            repoURL: "https://github.com/Dan-ney/microservice-e2e-gitops.git"
+            targetRevision: HEAD
+            path: argo-apps
+          destination:
+            server: "https://kubernetes.default.svc"
+            namespace: argocd
+          syncPolicy:
+            automated:
+              prune: true
+              selfHeal: true
+    EOT
+  ]
 
   depends_on = [
     module.gke,
     module.argocd_workload_identity
   ]
-}
-
-# App of Apps
-resource "kubernetes_manifest" "argocd_root_app" {
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata = {
-      name      = "root"
-      namespace = local.argocd_namespace
-    }
-    spec = {
-      project = "default"
-      source = {
-        repoURL        = "https://github.com/Dan-ney/microservice-e2e-gitops.git"
-        targetRevision = "HEAD"
-        path           = "argo-apps"
-      }
-      destination = {
-        server    = "https://kubernetes.default.svc"
-        namespace = local.argocd_namespace
-      }
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = true
-        }
-      }
-    }
-  }
-  depends_on = [helm_release.argocd]
 }
 
 # Get Admin Password
