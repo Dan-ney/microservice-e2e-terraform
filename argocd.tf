@@ -74,5 +74,4 @@ module "argocd_workload_identity" {
   k8s_sa_name         = var.argocd_repo_sa_name
   annotate_k8s_sa     = false
   roles               = ["roles/artifactregistry.reader"]
-  ]
 }
