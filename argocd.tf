@@ -71,7 +71,7 @@ resource "kubernetes_manifest" "argocd_root_app" {
       source = {
         repoURL        = "https://github.com/Dan-ney/microservice-e2e-gitops.git"
         targetRevision = "HEAD"
-        path           = "argo-apps"
+        path           = ""envs/prod/argo-apps""
       }
       destination = {
         server    = "https://kubernetes.default.svc"
