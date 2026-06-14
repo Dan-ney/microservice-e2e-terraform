@@ -12,25 +12,25 @@ resource "helm_release" "argocd" {
   create_namespace = true
   timeout          = 600
 
-values = [
+  values = [
     file("${path.root}/files/argocd-values.yaml"),
     <<-EOT
-    server:
-      additionalApplications:
-        - name: root
+    # 🛠️ Shifted to the root level (Removed the "server:" parent block)
+    additionalApplications:
+      - name: root
+        namespace: argocd
+        project: default
+        source:
+          repoURL: "https://github.com/Dan-ney/microservice-e2e-gitops.git"
+          targetRevision: HEAD
+          path: argo-apps
+        destination:
+          server: "https://kubernetes.default.svc"
           namespace: argocd
-          project: default
-          source:
-            repoURL: "https://github.com/Dan-ney/microservice-e2e-gitops.git"
-            targetRevision: HEAD
-            path: argo-apps
-          destination:
-            server: "https://kubernetes.default.svc"
-            namespace: argocd
-          syncPolicy:
-            automated:
-              prune: true
-              selfHeal: true
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
     EOT
   ]
 
