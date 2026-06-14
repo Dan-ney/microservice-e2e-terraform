@@ -2,25 +2,6 @@ locals {
   argocd_namespace = "argocd"
 }
 
-# ArgoCD Service Account
-resource "google_service_account" "argocd" {
-  account_id   = "${var.environment}-argocd-sa"
-  display_name = "ArgoCD Service Account"
-  project      = var.project_id
-}
-
-resource "google_project_iam_member" "argocd_ar_reader" {
-  project = var.project_id
-  role    = "roles/artifactregistry.reader"
-  member  = "serviceAccount:${google_service_account.argocd.email}"
-}
-
-resource "google_service_account_iam_member" "argocd_workload_identity" {
-  service_account_id = google_service_account.argocd.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[argocd/argocd-repo-server]"
-}
-
 # ArgoCD Helm Release
 resource "helm_release" "argocd" {
   name             = "argocd"
@@ -80,4 +61,21 @@ data "kubernetes_secret" "argocd_admin_password" {
     namespace = local.argocd_namespace
   }
   depends_on = [helm_release.argocd]
+}
+
+module "argocd_workload_identity" {
+  source  = "terraform-google-modules/kubernetes-engine/google//modules/workload-identity"
+  version = "~> 30.0"
+
+  project_id          = var.project_id
+  name                = var.argocd_workload_identity_name
+  namespace           = local.argocd_namespace
+  use_existing_k8s_sa = true
+  use_existing_gcp_sa = false
+  k8s_sa_name         = var.argocd_repo_sa_name
+  annotate_k8s_sa     = false
+
+  project_roles = [
+    "${var.project_id}=>roles/artifactregistry.reader"
+  ]
 }
