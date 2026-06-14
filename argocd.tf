@@ -61,3 +61,22 @@ module "argocd_workload_identity" {
   annotate_k8s_sa     = false
   roles               = ["roles/artifactregistry.reader"]
 }
+
+resource "google_secret_manager_secret" "argocd_password" {
+  secret_id = "${var.environment}-argocd-admin-password"
+  project   = var.project_id
+
+  replication {
+    auto {}
+  }
+
+  depends_on = [data.kubernetes_secret.argocd_admin_password]
+}
+
+resource "google_secret_manager_secret_version" "argocd_password_version" {
+  secret      = google_secret_manager_secret.argocd_password.id
+  
+  # Kubernetes secrets store data as base64 strings, so we decode it 
+  # before saving it to Secret Manager for clean, human-readable reading.
+  secret_data = base64decode(data.kubernetes_secret.argocd_admin_password.data["password"])
+}
