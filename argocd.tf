@@ -13,24 +13,7 @@ resource "helm_release" "argocd" {
   timeout          = 600
 
   values = [
-    file("${path.root}/files/argocd-values.yaml"),
-    <<-EOT
-    additionalApplications:
-      - name: root
-        namespace: argocd
-        project: default
-        source:
-          repoURL: "https://github.com/Dan-ney/microservice-e2e-gitops.git"
-          targetRevision: HEAD
-          path: argo-apps
-        destination:
-          server: "https://kubernetes.default.svc"
-          namespace: argocd
-        syncPolicy:
-          automated:
-            prune: true
-            selfHeal: true
-    EOT
+    file("${path.root}/files/argocd-values.yaml")
   ]
 
   depends_on = [
@@ -73,4 +56,34 @@ resource "google_secret_manager_secret" "argocd_password" {
 resource "google_secret_manager_secret_version" "argocd_password_version" {
   secret      = google_secret_manager_secret.argocd_password.id
     secret_data = data.kubernetes_secret.argocd_admin_password.data["password"]
+}
+
+resource "kubernetes_manifest" "argocd_root_app" {
+  manifest = {
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata = {
+      name      = "root"
+      namespace = local.argocd_namespace
+    }
+    spec = {
+      project = "default"
+      source = {
+        repoURL        = "https://github.com/Dan-ney/microservice-e2e-gitops.git"
+        targetRevision = "HEAD"
+        path           = "argo-apps"
+      }
+      destination = {
+        server    = "https://kubernetes.default.svc"
+        namespace = local.argocd_namespace
+      }
+      syncPolicy = {
+        automated = {
+          prune    = true
+          selfHeal = true
+        }
+      }
+    }
+  }
+  depends_on = [helm_release.argocd]
 }
